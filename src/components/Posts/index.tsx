@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
 
-import { Grid, CircularProgress } from "@material-ui/core";
+import { Grid, CircularProgress, Typography } from "@material-ui/core";
 
 import Post from "./Post";
 import useStyles from "./styles";
@@ -15,9 +15,9 @@ const Posts: FC<Props> = ({ setCurrentId }) => {
   const classes = useStyles();
   const posts = useSelector((state: AppState) => state.posts);
 
-  return !posts.length ? (
-    <CircularProgress />
-  ) : (
+  if (!Array.isArray(posts)) return <CircularProgress />;
+
+  return posts.length ? (
     <Grid
       className={classes.mainContainer}
       container
@@ -30,6 +30,10 @@ const Posts: FC<Props> = ({ setCurrentId }) => {
         </Grid>
       ))}
     </Grid>
+  ) : (
+    <Typography variant="h5" style={{ color: "#fafafa" }}>
+      There are no posts yet
+    </Typography>
   );
 };
 
