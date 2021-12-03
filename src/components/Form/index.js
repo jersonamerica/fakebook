@@ -1,29 +1,55 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createPost } from "../../actions/posts";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createPost, updatePost } from "../../actions/posts";
 
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 
 import useStyles from "./styles";
 
-const Form = () => {
-  const [postData, setPostData] = useState({
+const Form = ({ currentId, setCurrentId }) => {
+  const defaultState = {
     title: "",
     creator: "",
     message: "",
     tags: "",
     selectedFile: "",
-  });
+  };
+
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((p) => p._id === currentId) : null
+  );
+
+  const [postData, setPostData] = useState(defaultState);
+
+  const [error, setError] = useState("");
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (post) setPostData(post);
+  }, [post]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData));
+    const { title, creator, message, tags, selectedFile } = postData;
+    if (title && creator && message && tags && selectedFile) {
+      if (currentId) {
+        dispatch(updatePost(currentId, postData));
+      } else {
+        dispatch(createPost(postData));
+      }
+      clear();
+    } else {
+      setError("All fields are required");
+    }
   };
 
-  const clear = () => {};
+  const clear = () => {
+    setError("");
+    setCurrentId(null);
+    setPostData(defaultState);
+  };
 
   return (
     <Paper className={classes.paper}>
@@ -33,7 +59,14 @@ const Form = () => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Create Post</Typography>
+        <Typography variant="h6">
+          {currentId ? "Edit" : "Create"} Post
+        </Typography>
+        {error && (
+          <div className={classes.error}>
+            <Typography variant="body2">{error}</Typography>
+          </div>
+        )}
         <TextField
           name="creator"
           variant="outlined"
@@ -69,7 +102,9 @@ const Form = () => {
           label="Tags"
           fullWidth
           value={postData.tags}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+          onChange={(e) =>
+            setPostData({ ...postData, tags: e.target.value.split(",") })
+          }
         />
         <div className={classes.fileInput}>
           <FileBase

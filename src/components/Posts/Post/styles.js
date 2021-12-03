@@ -20,6 +20,11 @@ export default makeStyles({
     borderRadius: "15px",
     height: "100%",
     position: "relative",
+    "&:hover": {
+      "& $overlay2": {
+        display: "block",
+      },
+    },
   },
   overlay: {
     position: "absolute",
@@ -32,6 +37,7 @@ export default makeStyles({
     top: "20px",
     right: "20px",
     color: "white",
+    display: "none",
   },
   grid: {
     display: "flex",
