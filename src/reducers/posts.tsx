@@ -1,4 +1,7 @@
-const reducer = (posts = [], action) => {
+import { Post } from "types";
+import { PostAction } from "actions/types";
+
+const reducer = (posts: Array<Post> = [], action: PostAction) => {
   switch (action.type) {
     case "FETCH_ALL":
       return action.payload;

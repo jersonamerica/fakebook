@@ -1,14 +1,7 @@
 import * as api from "../api";
 import { Post } from "types";
 import { IDispatch } from "redux";
-
-enum ActionTypes {
-  FETCH_ALL = "FETCH_ALL",
-  CREATE = "CREATE",
-  UPDATE = "UPDATE",
-  DELETE = "DELETE",
-  LIKE = "LIKE",
-}
+import { ActionTypes } from "./types";
 
 // Action creators
 export const getPosts = () => async (dispatch: IDispatch) => {

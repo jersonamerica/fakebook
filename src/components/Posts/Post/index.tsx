@@ -1,7 +1,8 @@
-import React from "react";
+import { FC } from "react";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { deletePost, likePost } from "../../../actions/posts";
+import { Post as PostTypes } from "types";
 
 import {
   Card,
@@ -17,16 +18,21 @@ import EditIcon from "@material-ui/icons/Edit";
 
 import useStyles from "./styles";
 
-const Post = ({ post, setCurrentId }) => {
+type Props = {
+  post: PostTypes;
+  setCurrentId: (id: string) => void;
+};
+
+const Post: FC<Props> = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
   const handleDelete = () => {
-    dispatch(deletePost(post._id));
+    dispatch(deletePost(post._id!));
   };
 
   const handleLikePost = () => {
-    dispatch(likePost(post._id));
+    dispatch(likePost(post._id!));
   };
 
   return (
@@ -49,7 +55,7 @@ const Post = ({ post, setCurrentId }) => {
         <Button
           style={{ color: "white" }}
           size="small"
-          onClick={() => setCurrentId(post._id)}
+          onClick={() => setCurrentId(post._id!)}
         >
           <EditIcon fontSize="medium" />
         </Button>

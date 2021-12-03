@@ -1,20 +1,25 @@
-import React from "react";
+import { FC } from "react";
 import { useSelector } from "react-redux";
 
 import { Grid, CircularProgress } from "@material-ui/core";
 
 import Post from "./Post";
 import useStyles from "./styles";
+import { AppState } from "types";
 
-const Posts = ({ setCurrentId }) => {
+type Props = {
+  setCurrentId: (id: string) => void;
+};
+
+const Posts: FC<Props> = ({ setCurrentId }) => {
   const classes = useStyles();
-  const posts = useSelector((state) => state.posts);
+  const posts = useSelector((state: AppState) => state.posts);
 
   return !posts.length ? (
     <CircularProgress />
   ) : (
     <Grid
-      className={classes.container}
+      className={classes.mainContainer}
       container
       alignItems="stretch"
       spacing={3}

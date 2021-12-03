@@ -2,6 +2,7 @@ import * as Redux from "redux";
 
 /// <reference types="react-scripts" />
 
+declare module "react-file-base64";
 declare module "redux" {
   export interface IDispatch<A extends Redux.Action = Redux.AnyAction> {
     <T extends A>(action: T): T;

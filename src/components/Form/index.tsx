@@ -1,26 +1,35 @@
-import React, { useState, useEffect } from "react";
+import { FC, useState, useEffect, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost } from "../../actions/posts";
+import { AppState } from "types";
 
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
+// @ts-ignore
 import FileBase from "react-file-base64";
 
 import useStyles from "./styles";
+import { Post } from "types";
 
-const Form = ({ currentId, setCurrentId }) => {
+type Props = {
+  currentId: null | string;
+  setCurrentId: (id: null | string) => void;
+};
+
+const Form: FC<Props> = ({ currentId, setCurrentId }) => {
   const defaultState = {
     title: "",
     creator: "",
     message: "",
-    tags: "",
+    tags: [],
     selectedFile: "",
+    likeCount: 0,
   };
 
-  const post = useSelector((state) =>
+  const post = useSelector((state: AppState) =>
     currentId ? state.posts.find((p) => p._id === currentId) : null
   );
 
-  const [postData, setPostData] = useState(defaultState);
+  const [postData, setPostData] = useState<Post>(defaultState);
 
   const [error, setError] = useState("");
   const classes = useStyles();
@@ -30,7 +39,7 @@ const Form = ({ currentId, setCurrentId }) => {
     if (post) setPostData(post);
   }, [post]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { title, creator, message, tags, selectedFile } = postData;
     if (title && creator && message && tags && selectedFile) {
@@ -110,7 +119,7 @@ const Form = ({ currentId, setCurrentId }) => {
           <FileBase
             type="file"
             multiple={false}
-            onDone={({ base64 }) =>
+            onDone={({ base64 }: { base64: string }) =>
               setPostData({ ...postData, selectedFile: base64 })
             }
           />
